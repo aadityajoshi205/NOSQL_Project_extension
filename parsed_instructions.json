@@ -1,0 +1,122 @@
+[
+    {
+        "timestamp": 1,
+        "db_timestamp": 1,
+        "operation": "SET",
+        "db1": "HIVE",
+        "db2": null,
+        "student_id": "SID103",
+        "course_id": "CSE016",
+        "grade": "A"
+    },
+    {
+        "timestamp": 2,
+        "db_timestamp": 2,
+        "operation": "GET",
+        "db1": "HIVE",
+        "db2": null,
+        "student_id": "SID103",
+        "course_id": "CSE016",
+        "grade": null
+    },
+    {
+        "timestamp": 3,
+        "db_timestamp": 1,
+        "operation": "GET",
+        "db1": "SQL",
+        "db2": null,
+        "student_id": "SID103",
+        "course_id": "CSE016",
+        "grade": null
+    },
+    {
+        "timestamp": 4,
+        "db_timestamp": 2,
+        "operation": "GET",
+        "db1": "SQL",
+        "db2": null,
+        "student_id": "SID403",
+        "course_id": "CSE013",
+        "grade": null
+    },
+    {
+        "timestamp": 5,
+        "db_timestamp": 1,
+        "operation": "SET",
+        "db1": "MONGO",
+        "db2": null,
+        "student_id": "SID101",
+        "course_id": "CSE026",
+        "grade": "B"
+    },
+    {
+        "timestamp": 6,
+        "db_timestamp": 3,
+        "operation": "SET",
+        "db1": "SQL",
+        "db2": null,
+        "student_id": "SID103",
+        "course_id": "CSE016",
+        "grade": "B"
+    },
+    {
+        "timestamp": 7,
+        "db_timestamp": 2,
+        "operation": "GET",
+        "db1": "MONGO",
+        "db2": null,
+        "student_id": "SID403",
+        "course_id": "CSE013",
+        "grade": null
+    },
+    {
+        "timestamp": 8,
+        "db_timestamp": 3,
+        "operation": "SET",
+        "db1": "MONGO",
+        "db2": null,
+        "student_id": "SID101",
+        "course_id": "CSE026",
+        "grade": "A"
+    },
+    {
+        "timestamp": 9,
+        "db_timestamp": null,
+        "operation": "MERGE",
+        "db1": "HIVE",
+        "db2": "SQL",
+        "student_id": null,
+        "course_id": null,
+        "grade": null
+    },
+    {
+        "timestamp": 10,
+        "db_timestamp": null,
+        "operation": "MERGE",
+        "db1": "SQL",
+        "db2": "HIVE",
+        "student_id": null,
+        "course_id": null,
+        "grade": null
+    },
+    {
+        "timestamp": 11,
+        "db_timestamp": null,
+        "operation": "MERGE",
+        "db1": "SQL",
+        "db2": "MONGO",
+        "student_id": null,
+        "course_id": null,
+        "grade": null
+    },
+    {
+        "timestamp": 12,
+        "db_timestamp": null,
+        "operation": "MERGE",
+        "db1": "MONGO",
+        "db2": "HIVE",
+        "student_id": null,
+        "course_id": null,
+        "grade": null
+    }
+]
