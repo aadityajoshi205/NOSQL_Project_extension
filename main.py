@@ -3,7 +3,6 @@ from collections import defaultdict
 import json
 from MongoDB_connect import MongoDBHandler
 from postgresql_connector import PostgreSQLHandler
-from hive import Hive
 from parse_testcase import parse_testcase_file
 
 
@@ -13,7 +12,6 @@ primary_keys = []
 
 # Initialize 2D dictionaries using defaultdict
 mongo_logs = defaultdict(lambda: (0, ""))
-hive_logs = defaultdict(lambda: (0, ""))
 postgresql_logs = defaultdict(lambda: (0, ""))
 
 
@@ -35,11 +33,9 @@ with open(csv_file_path, mode='r', newline='', encoding='utf-8') as file:
 
         # Initialize with timestamp 0 and value ""
         mongo_logs[key] = (0, grade)
-        hive_logs[key] = (0, grade)
         postgresql_logs[key] = (0, grade)
 
 db_logs_map = {
-    'HIVE': hive_logs,
     'MONGODB': mongo_logs,
     'POSTGRESQL': postgresql_logs
 }
@@ -54,13 +50,10 @@ postgre_handler = PostgreSQLHandler(
 )
 
 mongo_handler = MongoDBHandler(primary_keys=primary_keys)
-
-hive_handler = Hive("student_grades", "localhost", 10000, "vaibhav", "CUSTOM", "Badminton@2468", primary_keys=primary_keys)
 file_path = input("Enter the path of the testcase file: ").strip()
 parse_testcase_file(
     file_path=file_path,
     mongo_handler=mongo_handler,
-    hive_handler=hive_handler,
     postgre_handler=postgre_handler,
     db_logs_map=db_logs_map,
     primary_keys=primary_keys)
