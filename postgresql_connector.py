@@ -3,15 +3,14 @@ from psycopg2 import sql
 
 from read_oplogs import read_oplogs
 
-class PostgreSQLHandler:
-    def __init__(self, host: str = "localhost", port: int = 5432, database: str = "doshte", user: str = "nande", password: str = "050309", primary_keys=None, db_logs_map=None):
+class POSTGRESQLHANDLER:
+    def __init__(self, host: str = "localhost", port: int = 5432, database: str = "doshte", user: str = "nande", password: str = "050309", primary_keys=None):
         self.host = host
         self.port = port
         self.database = database
         self.user = user
         self.password = password
         self.primary_keys = primary_keys   # 🟰 ADD THIS
-        self.db_logs_map = db_logs_map   
         self.connection = None
         self.cursor = None
         self.connect()

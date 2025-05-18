@@ -4,7 +4,7 @@ import csv
 from read_oplogs import read_oplogs
 
 
-class MongoDBHandler:
+class MONGODBHANDLER:
     def __init__(self, uri: str = "mongodb+srv://mittalvaibhav277:GLP5SHfCbxQdiWPm@cluster0.xghzn4m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", primary_keys=None):
         self.uri = uri
         self.client = None

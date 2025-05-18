@@ -1,14 +1,10 @@
 import re
-from MongoDB_connect import MongoDBHandler
-from postgresql_connector import PostgreSQLHandler
+from MongoDB_connect import MONGODBHANDLER
+from postgresql_connector import POSTGRESQLHANDLER
 from db_set import db_set
 from datetime import datetime
 
-def parse_testcase_file(file_path, mongo_handler, postgre_handler, db_logs_map, primary_keys):
-    system_handlers = {
-        "MONGODB": mongo_handler,
-        "POSTGRESQL": postgre_handler
-    }
+def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databases):
     for oplog_file in ['oplogs.mongodb', 'oplogs.postgresql']:
         open(oplog_file, 'w').close()
 
@@ -50,18 +46,18 @@ def parse_testcase_file(file_path, mongo_handler, postgre_handler, db_logs_map, 
                     # --- FULL SYNC block ---
                     print("[INFO] Full Sync started between all databases...")
 
-                    mongo_handler.merge('POSTGRESQL')
-                    postgre_handler.merge('MONGODB')
+                    db_handlers[0].merge('POSTGRESQL')
+                    db_handlers[1].merge('MONGODB')
 
                     print("[INFO] Full Sync completed.")
 
-            handler = system_handlers.get(db1)
+            handler = db_handlers[0] if db1 == Databases[0] else db_handlers[1]
 
             if operation == "SET":
                 timestamp=datetime.now()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
                 db_set(db_name=db1, pk=(student_id, course_id), value=grade, ts=timestamp,
-                       mongo_handler=mongo_handler, postgre_handler=postgre_handler,
+                       mongo_handler=db_handlers[0], postgre_handler=db_handlers[1],
                        db_logs_map=db_logs_map, primary_keys=primary_keys)
                 if db1 == "MONGODB":
                     mongo_logger = open('oplogs.mongodb', 'a')

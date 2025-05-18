@@ -1,4 +1,5 @@
-def db_set(db_name: str, pk: tuple, value: str, ts: int, mongo_handler=None, postgre_handler=None, db_logs_map=None, primary_keys=None):
+from datetime import datetime
+def db_set(db_name: str, pk: tuple, value: str, ts: datetime, mongo_handler=None, postgre_handler=None, db_logs_map=None, primary_keys=None):
     """
     Generic db_set dispatcher function.
     """
