@@ -69,7 +69,7 @@ class POSTGRESQLHANDLER:
 
 
 
-    def get(self, table_name: str, pk: tuple):
+    def get(self,database_name: str, table_name: str, pk: tuple):
         try:
             # Define the composite PK columns for your table
             pk_columns = ("student-ID", "course-id")

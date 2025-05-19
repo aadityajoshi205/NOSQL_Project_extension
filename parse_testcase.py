@@ -5,6 +5,10 @@ from db_set import db_set
 from datetime import datetime
 
 def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databases):
+
+    for db in Databases:
+        globals()[db + "_cache"]= {} 
+
     for oplog_file in ['oplogs.mongodb', 'oplogs.postgresql']:
         open(oplog_file, 'w').close()
 
@@ -56,39 +60,58 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             if operation == "SET":
                 timestamp=datetime.now()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
-                db_set(db_name=db1, pk=(student_id, course_id), value=grade, ts=timestamp,
-                       mongo_handler=db_handlers[0], postgre_handler=db_handlers[1],
-                       db_logs_map=db_logs_map, primary_keys=primary_keys)
-                if db1 == "MONGODB":
-                    mongo_logger = open('oplogs.mongodb', 'a')
-                    mongo_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
-                    mongo_logger.close()
-                elif db1 == "POSTGRESQL":
-                    postgresql_logger = open('oplogs.postgresql', 'a')
-                    postgresql_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
-                    postgresql_logger.close()
+                globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade]
 
-            elif operation == "GET":
-                if handler:
-                    if db1 == "MONGODB":
-                        value = handler.get("university_db", "grades_of_students", pk=(student_id, course_id))
-                    elif db1 == "POSTGRESQL":
-                        value = handler.get("student_course_grades", pk=(student_id, course_id))
-                    else:
-                        value = None
-                        print(f"Unknown DB for GET operation: {db1}")
-                    timestamp=datetime.now()
+            # if operation == "SET":
+            #     timestamp=datetime.now()
+            #     print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
+            #     db_set(db_name=db1, pk=(student_id, course_id), value=grade, ts=timestamp,
+            #            mongo_handler=db_handlers[0], postgre_handler=db_handlers[1],
+            #            db_logs_map=db_logs_map, primary_keys=primary_keys)
+            #     if db1 == "MONGODB":
+            #         mongo_logger = open('oplogs.mongodb', 'a')
+            #         mongo_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
+            #         mongo_logger.close()
+            #     elif db1 == "POSTGRESQL":
+            #         postgresql_logger = open('oplogs.postgresql', 'a')
+            #         postgresql_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
+            #         postgresql_logger.close()
 
-                    print(f"{timestamp}, {db1}.GET({student_id},{course_id}) = {value}")
+            if operation =="GET":
+                temp=1
+                if (student_id, course_id) in globals()[db1 + "_cache"].keys():
+                    value = globals()[db1 + "_cache"][(student_id, course_id)][1]
+                elif db1 in Databases:
+                    value=handler.get("university_db", "student_course_grades", pk=(student_id, course_id))
+                else:
+                    value = None
+                    print(f"Unknown DB for GET operation: {db1}")
+                    temp=0
+                if temp:
+                    timestamp = datetime.now()
+                    print(f"{timestamp}, {db1}.GET(({student_id},{course_id})) = {value}")
+
+            # if operation == "GET":
+            #     if handler:
+            #         if db1 == "MONGODB":
+            #             value = handler.get("university_db", "grades_of_students", pk=(student_id, course_id))
+            #         elif db1 == "POSTGRESQL":
+            #             value = handler.get("student_course_grades", pk=(student_id, course_id))
+            #         else:
+            #             value = None
+            #             print(f"Unknown DB for GET operation: {db1}")
+            #         timestamp=datetime.now()
+
+            #         print(f"{timestamp}, {db1}.GET({student_id},{course_id}) = {value}")
                     
-                    if db1 == "MONGODB":
-                        mongo_logger = open('oplogs.mongodb', 'a')
-                        mongo_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
-                        mongo_logger.close()
-                    elif db1 == "POSTGRESQL":
-                        postgresql_logger = open('oplogs.postgresql', 'a')
-                        postgresql_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
-                        postgresql_logger.close()
+            #         if db1 == "MONGODB":
+            #             mongo_logger = open('oplogs.mongodb', 'a')
+            #             mongo_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
+            #             mongo_logger.close()
+            #         elif db1 == "POSTGRESQL":
+            #             postgresql_logger = open('oplogs.postgresql', 'a')
+            #             postgresql_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
+            #             postgresql_logger.close()
                     
 
 
