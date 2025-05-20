@@ -79,6 +79,9 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                 timestamp=get_precise_timestamp()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
                 globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade]
+                logger=open('oplogs.' + db1.lower(), 'a')
+                logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
+                logger.close()
 
             # if operation == "SET":
             #     timestamp=datetime.now()
@@ -108,6 +111,9 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                 if temp:
                     timestamp = get_precise_timestamp()
                     print(f"{timestamp}, {db1}.GET(({student_id},{course_id})) = {value}")
+                    logger=open('oplogs.' + db1.lower(), 'a')
+                    logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id})) = {value}\n")
+                    logger.close()
 
             # if operation == "GET":
             #     if handler:
