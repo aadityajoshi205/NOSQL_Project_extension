@@ -33,7 +33,6 @@ sync_futures = []
 def init_primary_keys(csv_file_path):
     """
     Load valid primary keys from the CSV into the primary_keys set.
-    We no longer pre-populate any cache entries here.
     """
     with open(csv_file_path, mode='r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
@@ -58,22 +57,14 @@ def sync(cache_snapshot: dict, db_name: str):
 
 def db_set(db_name: str, pk: tuple, value: str, ts: int):
     """
-    SET: update the in-memory cache, then immediately persist to the underlying DB.
+    SET: update the in-memory cache only.
+    Actual database sync is deferred until merge or final shutdown.
     """
     if pk not in primary_keys:
         print(f"{pk} not in primary keys.")
         return
 
-    # Update our cache
     db_logs_map[db_name][pk] = (ts, value)
-
-    # Persist immediately for non-merge operations
-    if db_name == 'HIVE':
-        hive_handler.update_data(pk, value)
-    elif db_name == 'MONGODB':
-        mongo_handler.set("university_db", "grades_of_students", pk, value, ts)
-    else:  # POSTGRESQL
-        postgre_handler.set("student_course_grades", pk, value, ts)
 
 def db_get(db_name: str, pk: tuple) -> str:
     """
@@ -88,7 +79,7 @@ def db_get(db_name: str, pk: tuple) -> str:
     if pk in cache:
         return cache[pk][1]
 
-    # otherwise, fallback to the real DB
+    # fallback to the real DB
     if db_name == 'HIVE':
         return hive_handler.select_data("student_grades", pk)
     elif db_name == 'MONGODB':
@@ -160,10 +151,19 @@ def parse_testcase_file(file_path, gc_start=0):
     with open('gc.txt', 'w') as f:
         f.write(str(timestamp))
 
+def flush_all_caches():
+    """
+    Flush all cached writes to the respective databases.
+    """
+    for db_name, logs in db_logs_map.items():
+        snapshot = dict(logs)
+        future = executor.submit(sync, snapshot, db_name)
+        sync_futures.append(future)
+
 if __name__ == '__main__':
     try:
         init_primary_keys('student_course_grades.csv')
         parse_testcase_file('example_testcase_3.in')
     finally:
-        # wait for all background syncs to finish before exiting
+        flush_all_caches()
         executor.shutdown(wait=True)
