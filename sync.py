@@ -1,7 +1,5 @@
 from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
-from db_set import db_set
-
 from datetime import datetime
 
 

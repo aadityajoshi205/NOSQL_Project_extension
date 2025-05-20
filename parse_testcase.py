@@ -2,10 +2,17 @@ import re
 from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
 from db_set import db_set
-from datetime import datetime
+import time
+from datetime import datetime, timezone
 from sync import sync
+from merge import merge
 
-datetime_format = "%Y-%m-%d %H:%M:%S.%f"
+def get_precise_timestamp():
+    ns = time.time_ns()
+    seconds = ns // 1_000_000_000
+    nanoseconds = ns % 1_000_000_000
+    dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
+    return dt.strftime("%Y-%m-%d %H:%M:%S") + f".{nanoseconds:09d}Z"
 
 def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databases):
 
@@ -61,7 +68,7 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             handler = db_handlers[0] if db1 == Databases[0] else db_handlers[1]
 
             if operation == "SET":
-                timestamp=datetime.now()
+                timestamp=get_precise_timestamp()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
                 globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade]
 
@@ -91,7 +98,7 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                     print(f"Unknown DB for GET operation: {db1}")
                     temp=0
                 if temp:
-                    timestamp = datetime.now()
+                    timestamp = get_precise_timestamp()
                     print(f"{timestamp}, {db1}.GET(({student_id},{course_id})) = {value}")
 
             # if operation == "GET":
@@ -116,12 +123,13 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             #             postgresql_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
             #             postgresql_logger.close()
                     
+            if operation=="MERGE":
+                globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"])
 
-
-            elif operation == "MERGE":
-                if handler:
-                    print(f"{db1}.MERGE({db2})")
-                    handler.merge(db2)
+            # elif operation == "MERGE":
+            #     if handler:
+            #         print(f"{db1}.MERGE({db2})")
+            #         handler.merge(db2)
 
     i=0
     for db in Databases:
