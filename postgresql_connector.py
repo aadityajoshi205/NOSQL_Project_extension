@@ -46,7 +46,7 @@ class POSTGRESQLHANDLER:
     #         print("Multiple rows updated (unexpected).")
     #     self.connection.commit()
 
-    def set(self, table: str, pk: tuple, value: str, ts: int):
+    def set(self, database:str, table: str, pk: tuple, value: str, ts: int):
         student_id, course_id = pk
         print(student_id, course_id, value, ts)
 

@@ -18,7 +18,7 @@ class MONGODBHANDLER:
             self.client = MongoClient(self.uri, server_api=ServerApi('1'))
             self.client.admin.command('ping')
             self.db = self.client["university_db"]
-            self.collection=self.db["grades_of_students"]
+            self.collection=self.db["student_course_grades"]
             print("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
             print("Connection failed:", e)

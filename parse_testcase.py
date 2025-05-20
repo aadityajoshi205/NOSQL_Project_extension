@@ -3,6 +3,9 @@ from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
 from db_set import db_set
 from datetime import datetime
+from sync import sync
+
+datetime_format = "%Y-%m-%d %H:%M:%S.%f"
 
 def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databases):
 
@@ -119,3 +122,9 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                 if handler:
                     print(f"{db1}.MERGE({db2})")
                     handler.merge(db2)
+
+    i=0
+    for db in Databases:
+        sync(db_handlers[i], globals()[db + "_cache"])
+        i+=1
+        print(globals()[db + "_cache"])
