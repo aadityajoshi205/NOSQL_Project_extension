@@ -6,6 +6,7 @@ import time
 from datetime import datetime, timezone
 from sync import sync
 from merge import merge
+from hive import HIVEHANDLER
 
 def get_precise_timestamp():
     ns = time.time_ns()
