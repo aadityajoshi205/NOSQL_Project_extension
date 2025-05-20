@@ -1,6 +1,5 @@
 from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
-from hive import HIVEHANDLER
 from datetime import datetime
 
 

@@ -6,7 +6,6 @@ import time
 from datetime import datetime, timezone
 from sync import sync
 from merge import merge
-from hive import HIVEHANDLER
 
 def get_precise_timestamp():
     ns = time.time_ns()
@@ -20,7 +19,8 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
     for db in Databases:
         globals()[db + "_cache"]= {} 
 
-    for oplog_file in [globals()["oplogs." + db.lower()] for db in Databases]:
+
+    for oplog_file in ["oplogs." + db.lower() for db in Databases]:
         open(oplog_file, 'w').close()
 
     with open(file_path, 'r') as file:
@@ -63,11 +63,11 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                     for i in range(1, len(db_handlers)):
                         db_cache_1 = globals()[Databases[0] + "_cache"]
                         db_cache_2= globals()[Databases[i] + "_cache"]
-                        globals()[Databases[0] + "_cache"]=merge(db_cache_1,db_cache_2)
+                        globals()[Databases[0] + "_cache"]=merge(db_cache_1,db_cache_2,Databases[0])
                     for i in range(1, len(db_handlers)):
                         db_cache_1 = globals()[Databases[i] + "_cache"]
                         db_cache_2= globals()[Databases[0] + "_cache"]
-                        globals()[Databases[i] + "_cache"]=merge(db_cache_1,db_cache_2)
+                        globals()[Databases[i] + "_cache"]=merge(db_cache_1,db_cache_2,Databases[i])
 
                     # db_handlers[0].merge('POSTGRESQL')
                     # db_handlers[1].merge('MONGODB')
@@ -139,7 +139,7 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             #             postgresql_logger.close()
                     
             if operation=="MERGE":
-                globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"])
+                globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
 
             # elif operation == "MERGE":
             #     if handler:
