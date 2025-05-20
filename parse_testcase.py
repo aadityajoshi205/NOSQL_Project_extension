@@ -19,7 +19,7 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
     for db in Databases:
         globals()[db + "_cache"]= {} 
 
-    for oplog_file in ['oplogs.mongodb', 'oplogs.postgresql']:
+    for oplog_file in [globals()["oplogs." + db.lower()] for db in Databases]:
         open(oplog_file, 'w').close()
 
     with open(file_path, 'r') as file:
