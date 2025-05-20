@@ -59,9 +59,17 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             elif 'FULL_SYNC' in line:
                     # --- FULL SYNC block ---
                     print("[INFO] Full Sync started between all databases...")
+                    for i in range(1, len(db_handlers)):
+                        db_cache_1 = globals()[Databases[0] + "_cache"]
+                        db_cache_2= globals()[Databases[i] + "_cache"]
+                        globals()[Databases[0] + "_cache"]=merge(db_cache_1,db_cache_2)
+                    for i in range(1, len(db_handlers)):
+                        db_cache_1 = globals()[Databases[i] + "_cache"]
+                        db_cache_2= globals()[Databases[0] + "_cache"]
+                        globals()[Databases[i] + "_cache"]=merge(db_cache_1,db_cache_2)
 
-                    db_handlers[0].merge('POSTGRESQL')
-                    db_handlers[1].merge('MONGODB')
+                    # db_handlers[0].merge('POSTGRESQL')
+                    # db_handlers[1].merge('MONGODB')
 
                     print("[INFO] Full Sync completed.")
 
