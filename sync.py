@@ -1,7 +1,3 @@
-from MongoDB_connect import MONGODBHANDLER
-from postgresql_connector import POSTGRESQLHANDLER
-from datetime import datetime
-
 
 def sync(db_handler,db_cache):
     for key, value in db_cache.items():

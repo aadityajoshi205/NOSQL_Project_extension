@@ -1,5 +1,3 @@
-from datetime import datetime
-
 def merge(db_cache_1,db_cache_2,db1):
     for key in db_cache_2.keys():
         if key not in db_cache_1.keys():

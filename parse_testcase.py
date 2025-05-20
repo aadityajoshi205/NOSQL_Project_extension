@@ -1,7 +1,4 @@
 import re
-from MongoDB_connect import MONGODBHANDLER
-from postgresql_connector import POSTGRESQLHANDLER
-from db_set import db_set
 import time
 from datetime import datetime, timezone
 from sync import sync
