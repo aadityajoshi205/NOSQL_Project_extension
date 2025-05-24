@@ -1,8 +1,6 @@
 import psycopg2
 from psycopg2 import sql
 
-from read_oplogs import read_oplogs
-
 class POSTGRESQLHANDLER:
     def __init__(self, host: str = "localhost", port: int = 5432, database: str = "doshte", user: str = "nande", password: str = "050309", primary_keys=None):
         self.host = host

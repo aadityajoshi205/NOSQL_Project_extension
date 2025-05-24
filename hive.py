@@ -4,7 +4,6 @@ import time
 from pyhive import hive
 import csv
 import uuid
-from read_oplogs import read_oplogs
 
 class HIVEHANDLER:
     table_name = ""
