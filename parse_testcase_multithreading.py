@@ -153,16 +153,16 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
             #         print(f"{db1}.MERGE({db2})")
             #         handler.merge(db2)
 
-    # executor.shutdown(wait=True)
+    executor.shutdown(wait=True)
     i=0
     for db in Databases:
-        # sync(db_handlers[i], globals()[db + "_cache"])
-        future = executor.submit(sync, db_handlers[i], globals()[db + "_cache"])
-        sync_futures.append(future)
+        sync(db_handlers[i], globals()[db + "_cache"])
+        # future = executor.submit(sync, db_handlers[i], globals()[db + "_cache"])
+        # sync_futures.append(future)
         i+=1
         # print(globals()[db + "_cache"])
     
-    executor.shutdown(wait=True)
+    # executor.shutdown(wait=True)
     for future in sync_futures:
         try:
             print(f"Future Result: {future.result}")  # will raise if the sync task failed
