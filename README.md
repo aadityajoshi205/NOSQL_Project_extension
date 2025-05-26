@@ -77,4 +77,33 @@ flowchart LR
   C -->|"write log"| D
   C -->|"on MERGE/FULL_SYNC"| E
   G -->|"apply to real DB"| H[(Database Handlers)]
-mermaid
+```
+
+### Sequence Diagram:
+```mermaid
+sequenceDiagram
+    participant User as Testcase File
+    participant Parser as parse_testcase
+    participant Cache
+    participant Logger
+    participant Merger
+    participant Executor
+    participant SyncFn as sync()
+    participant DB as Database Handler
+
+    User->>Parser: read line
+    Parser->>Cache: SET or GET or MERGE
+    alt SET
+      Cache->>Logger: append SET log
+    else GET
+      Cache-->>Parser: value or miss
+      Parser->>DB: handler.get() if miss
+      DB-->>Parser: value
+      Parser->>Logger: append GET log
+    else MERGE/FULL_SYNC
+      Parser->>Merger: merge caches
+      Merger->>Executor: submit sync task
+    end
+    Executor->>SyncFn: sync(handler, snapshot)
+    SyncFn->>DB: apply snapshot
+```
