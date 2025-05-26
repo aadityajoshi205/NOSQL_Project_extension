@@ -16,6 +16,7 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=50)
     sync_futures = []
 
+
     for db in Databases:
         globals()[db + "_cache"]= {} 
 
@@ -74,7 +75,10 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
 
                     print("[INFO] Full Sync completed.")
 
-            handler = db_handlers[0] if db1 == Databases[0] else db_handlers[1]
+            handler=None
+            for i in range(0, len(db_handlers)):
+                if db1 == Databases[i]:
+                    handler = db_handlers[i]
 
             if operation == "SET":
                 timestamp=get_precise_timestamp()
@@ -141,7 +145,7 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
             if operation=="MERGE":
                 globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
                 snapshot = dict(globals()[db1 + "_cache"])
-                future = executor.submit(sync, db_handlers[db1 + "_handler"], snapshot)
+                future = executor.submit(sync, handler, snapshot)
                 sync_futures.append(future)
 
             # elif operation == "MERGE":
@@ -149,11 +153,11 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
             #         print(f"{db1}.MERGE({db2})")
             #         handler.merge(db2)
 
-    executor.shutdown(wait=True)
+    # executor.shutdown(wait=True)
     i=0
     for db in Databases:
         # sync(db_handlers[i], globals()[db + "_cache"])
-        future = executor.submit(sync, db_handlers[db + "_handler"], globals()[db + "_cache"])
+        future = executor.submit(sync, db_handlers[i], globals()[db + "_cache"])
         sync_futures.append(future)
         i+=1
         # print(globals()[db + "_cache"])
