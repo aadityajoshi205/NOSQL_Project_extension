@@ -13,7 +13,7 @@ def get_precise_timestamp():
     return dt.strftime("%Y-%m-%d %H:%M:%S") + f".{nanoseconds:09d}Z"
 
 def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, primary_keys, Databases):
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=50)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=20)
     sync_futures = []
 
 
