@@ -66,7 +66,7 @@ flowchart LR
     A[Read & Parse File] --> B[Regex Match Ops]
   end
   subgraph Cache & Log
-    C(Cache: globals()[db + "_cache"]) --> D(Log File: oplogs.db)
+    C(Cache) --> D(Log File: oplogs.db)
   end
   subgraph Merge & Sync
     E[merge(cache1, cache2)] --> F[ThreadPoolExecutor]
