@@ -5,7 +5,7 @@ Synchronization of heterogenous systems considering Hive, PostgreSQL and MongoDB
 1. [PostgreSQL Setup](#postgresql-setup)
 2. [Introduction](#introduction)
 3. [Features](#features)
-4. [Code Overview](#code-review)
+4. [Code Overview](#code-overview)
 5. [Architecture](#architecture)
 
 ## PostgreSQL setup:
