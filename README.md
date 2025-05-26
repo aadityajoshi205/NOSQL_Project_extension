@@ -69,8 +69,8 @@ flowchart LR
     C[Cache] --> D[Log File: oplogs.db]
   end
   subgraph Merge & Sync
-    E[merge(cache1, cache2)] --> F[ThreadPoolExecutor]
-    F --> G[sync(handler, snapshot)]
+    E[merge cache1 and cache2] --> F[ThreadPoolExecutor]
+    F --> G[sync]
   end
 
   A -->|"SET / GET / MERGE / FULL_SYNC"| C
