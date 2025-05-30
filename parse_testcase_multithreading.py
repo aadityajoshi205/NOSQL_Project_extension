@@ -156,7 +156,7 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
     # executor.shutdown(wait=True)
     i=0
     for db in Databases:
-        sync(db_handlers[i], globals()[db + "_cache"])
+        # sync(db_handlers[i], globals()[db + "_cache"])
         future = executor.submit(sync, db_handlers[i], globals()[db + "_cache"])
         sync_futures.append(future)
         i+=1
