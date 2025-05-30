@@ -162,7 +162,7 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
         i+=1
         # print(globals()[db + "_cache"])
     
-    executor.shutdown(wait=True)
+    executor.shutdown(wait=True, timeout=120.0)
     for future in sync_futures:
         try:
             print(f"Future Result: {future.result}")  # will raise if the sync task failed
