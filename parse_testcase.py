@@ -71,12 +71,15 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
 
                     print("[INFO] Full Sync completed.")
 
-            handler = db_handlers[0] if db1 == Databases[0] else db_handlers[1]
+            handler=None
+            for i in range(0, len(db_handlers)):
+                if db1 == Databases[i]:
+                    handler = db_handlers[i]
 
             if operation == "SET":
                 timestamp=get_precise_timestamp()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
-                globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade]
+                globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade, 0]
                 logger=open('oplogs.' + db1.lower(), 'a')
                 logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
                 logger.close()
@@ -98,7 +101,7 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
 
             if operation =="GET":
                 temp=1
-                if (student_id, course_id) in globals()[db1 + "_cache"].keys():
+                if (student_id, course_id) in globals()[db1 + "_cache"].keys() and globals()[db1 + "_cache"][(student_id, course_id)][2] == 0:
                     value = globals()[db1 + "_cache"][(student_id, course_id)][1]
                 elif db1 in Databases:
                     value=handler.get("university_db", "student_course_grades", pk=(student_id, course_id))

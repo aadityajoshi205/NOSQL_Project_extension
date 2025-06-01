@@ -5,11 +5,12 @@ from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
 from parse_testcase import parse_testcase_file
 from parse_testcase_multithreading import parse_testcase_file_multithreading
+from hive import HIVEHANDLER
 
 
 # mongo_handler = MongoDBHandler()
 
-Databases=["MONGODB", "POSTGRESQL"]
+Databases=["MONGODB", "POSTGRESQL","HIVE"]
 primary_keys = []
 
 # Initialize 2D dictionaries using defaultdict
