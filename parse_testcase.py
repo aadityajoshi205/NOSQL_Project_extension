@@ -146,6 +146,14 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
             #         print(f"{db1}.MERGE({db2})")
             #         handler.merge(db2)
 
+            if operation == "DELETE":
+                timestamp=get_precise_timestamp()
+                print(f"{timestamp}, {db1}.DELETE(({student_id},{course_id}), {grade})")
+                globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade, 1]
+                logger=open('oplogs.' + db1.lower(), 'a')
+                logger.write(f"{timestamp}, {db1}.DELETE(({student_id},{course_id}), {grade})\n")
+                logger.close()
+
     i=0
     for db in Databases:
         sync(db_handlers[i], globals()[db + "_cache"])
