@@ -46,7 +46,6 @@ class POSTGRESQLHANDLER:
 
     def set(self, database:str, table: str, pk: tuple, value: str, ts: int):
         student_id, course_id = pk
-        print(student_id, course_id, value, ts)
 
         # First, try to update
         update_query = f"""UPDATE {table} SET grade = %s WHERE "student-ID" = %s AND "course-id" = %s;"""
@@ -115,6 +114,23 @@ class POSTGRESQLHANDLER:
     #                     print(f"Merged ({pk[0]}, {pk[1]}) from {other_system_name} into PostgreSQL at ts={latest_ts}")
 
     #     pg_oplog.close()
+
+    def delete(self, database: str, table: str, pk: tuple):
+        student_id, course_id = pk
+
+        delete_query = f"""DELETE FROM {table} WHERE "student-ID" = %s AND "course-id" = %s;"""
+        self.cursor.execute(delete_query, (student_id, course_id))
+
+        if self.cursor.rowcount == 0:
+            print("No row found to delete.")
+        elif self.cursor.rowcount == 1:
+            print("Row deleted successfully.")
+        else:
+            print("Multiple rows deleted (unexpected).")
+
+        self.connection.commit()
+
+
 
     def disconnect(self):
         try:
