@@ -86,3 +86,6 @@ class MONGODBHANDLER:
             collection = db[collection_name]
             result = collection.insert_many(student_records)
             print(f"Successfully inserted {len(result.inserted_ids)} student records.")
+    
+    def delete():
+        pass

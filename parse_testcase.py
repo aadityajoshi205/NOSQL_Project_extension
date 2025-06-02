@@ -11,7 +11,7 @@ def get_precise_timestamp():
     dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
     return dt.strftime("%Y-%m-%d %H:%M:%S") + f".{nanoseconds:09d}Z"
 
-def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databases):
+def parse_testcase_file(file_path, db_handlers,Databases):
 
     for db in Databases:
         globals()[db + "_cache"]= {} 
@@ -54,6 +54,11 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                 if match:
                     db1, student_id, course_id = match.groups()
                     operation = 'GET'
+            elif 'DELETE' in line:
+                match = re.match(r'(\w+)\.DELETE\(([^,]+),([^)]+)\)', line)
+                if match:
+                    db1, student_id, course_id = match.groups()
+                    operation = 'DELETE'
             elif 'FULL_SYNC' in line:
                     # --- FULL SYNC block ---
                     print("[INFO] Full Sync started between all databases...")
@@ -84,30 +89,16 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                 logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
                 logger.close()
 
-            # if operation == "SET":
-            #     timestamp=datetime.now()
-            #     print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
-            #     db_set(db_name=db1, pk=(student_id, course_id), value=grade, ts=timestamp,
-            #            mongo_handler=db_handlers[0], postgre_handler=db_handlers[1],
-            #            db_logs_map=db_logs_map, primary_keys=primary_keys)
-            #     if db1 == "MONGODB":
-            #         mongo_logger = open('oplogs.mongodb', 'a')
-            #         mongo_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
-            #         mongo_logger.close()
-            #     elif db1 == "POSTGRESQL":
-            #         postgresql_logger = open('oplogs.postgresql', 'a')
-            #         postgresql_logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
-            #         postgresql_logger.close()
 
             if operation =="GET":
                 temp=1
                 if (student_id, course_id) in globals()[db1 + "_cache"].keys() and globals()[db1 + "_cache"][(student_id, course_id)][2] == 0:
                     value = globals()[db1 + "_cache"][(student_id, course_id)][1]
-                elif db1 in Databases:
+                elif db1 in Databases and not globals()[db1 + "_cache"][(student_id, course_id)][2] == 1:
                     value=handler.get("university_db", "student_course_grades", pk=(student_id, course_id))
                 else:
                     value = None
-                    print(f"Unknown DB for GET operation: {db1}")
+                    print(f"({student_id}, {course_id}) not found in {db1}")
                     temp=0
                 if temp:
                     timestamp = get_precise_timestamp()
@@ -115,36 +106,9 @@ def parse_testcase_file(file_path, db_handlers, db_logs_map, primary_keys,Databa
                     logger=open('oplogs.' + db1.lower(), 'a')
                     logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id})) = {value}\n")
                     logger.close()
-
-            # if operation == "GET":
-            #     if handler:
-            #         if db1 == "MONGODB":
-            #             value = handler.get("university_db", "grades_of_students", pk=(student_id, course_id))
-            #         elif db1 == "POSTGRESQL":
-            #             value = handler.get("student_course_grades", pk=(student_id, course_id))
-            #         else:
-            #             value = None
-            #             print(f"Unknown DB for GET operation: {db1}")
-            #         timestamp=datetime.now()
-
-            #         print(f"{timestamp}, {db1}.GET({student_id},{course_id}) = {value}")
-                    
-            #         if db1 == "MONGODB":
-            #             mongo_logger = open('oplogs.mongodb', 'a')
-            #             mongo_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
-            #             mongo_logger.close()
-            #         elif db1 == "POSTGRESQL":
-            #             postgresql_logger = open('oplogs.postgresql', 'a')
-            #             postgresql_logger.write(f"{timestamp}, {db1}.GET(({student_id},{course_id}))\n")
-            #             postgresql_logger.close()
                     
             if operation=="MERGE":
                 globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
-
-            # elif operation == "MERGE":
-            #     if handler:
-            #         print(f"{db1}.MERGE({db2})")
-            #         handler.merge(db2)
 
             if operation == "DELETE":
                 timestamp=get_precise_timestamp()
