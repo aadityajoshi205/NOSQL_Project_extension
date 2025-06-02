@@ -53,6 +53,20 @@ class MONGODBHANDLER:
         query = {"student-ID": pk[0], "course-id": pk[1]}
         # Perform the find operation
         return collection.find_one(query)
+    
+    def delete(self, db_name: str, collection_name: str, pk: tuple):
+        db = self.client[db_name]
+        collection = db[collection_name]
+
+        # Construct the query based on the composite primary key (assuming it's (student_id, course_id))
+        query = {"student-ID": pk[0], "course-id": pk[1]}
+        
+        # Perform the delete operation
+        result = collection.delete_one(query)
+        
+        # Return True if a document was deleted, False otherwise
+        return result.deleted_count > 0
+
 
     def insert_student_grade(self, db_name: str, collection_name: str, student_data: dict):
         db = self.client[db_name]
