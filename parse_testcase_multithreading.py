@@ -13,7 +13,7 @@ def get_precise_timestamp():
     return dt.strftime("%Y-%m-%d %H:%M:%S") + f".{nanoseconds:09d}Z"
 
 def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, primary_keys, Databases):
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=50)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=20)
     sync_futures = []
 
 
@@ -144,9 +144,9 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
                     
             if operation=="MERGE":
                 globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
-                snapshot = dict(globals()[db1 + "_cache"])
-                future = executor.submit(sync, handler, snapshot)
-                sync_futures.append(future)
+                # snapshot = dict(globals()[db1 + "_cache"])
+                # future = executor.submit(sync, handler, snapshot)
+                # sync_futures.append(future)
 
             # elif operation == "MERGE":
             #     if handler:
@@ -162,7 +162,7 @@ def parse_testcase_file_multithreading(file_path, db_handlers, db_logs_map, prim
         i+=1
         # print(globals()[db + "_cache"])
     
-    executor.shutdown(wait=True)
+    executor.shutdown(wait=True, timeout=120.0)
     for future in sync_futures:
         try:
             print(f"Future Result: {future.result}")  # will raise if the sync task failed
