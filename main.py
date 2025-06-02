@@ -3,6 +3,7 @@ from collections import defaultdict
 import json
 from MongoDB_connect import MONGODBHANDLER
 from postgresql_connector import POSTGRESQLHANDLER
+from hive import HIVEHANDLER
 from parse_testcase import parse_testcase_file
 from parse_testcase_multithreading import parse_testcase_file_multithreading
 from hive import HIVEHANDLER
