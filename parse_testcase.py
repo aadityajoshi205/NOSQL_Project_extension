@@ -75,6 +75,17 @@ def parse_testcase_file(file_path, db_handlers,Databases):
                     # db_handlers[1].merge('MONGODB')
 
                     print("[INFO] Full Sync completed.")
+            
+            elif 'COMMIT' in line:
+                i=0
+                for db in Databases:
+                    sync(db_handlers[i], globals()[db + "_cache"])
+                    i+=1
+                    globals()[db+"_cache"].clear()
+            
+            elif 'ROLLBACK' in line:
+                for db in Databases:
+                    globals()[db+"_cache"].clear()
 
             handler=None
             for i in range(0, len(db_handlers)):
