@@ -217,6 +217,25 @@ class HIVEHANDLER:
 
     #     hive_oplog.close()
 
+    def delete(self, db_name: str, collection_name: str, pk: tuple):
+        if pk is not None:
+            self.student_id, self.course_id = pk
+        else:
+            self.student_id = None
+            self.course_id = None
+            print("Primary key is required for delete operation.")
+            return
+
+        try:
+            query = f"""
+            DELETE FROM {self.table_name}
+            WHERE student_id = '{self.student_id}' AND course_id = '{self.course_id}'
+            """
+            self.cursor.execute(query)
+            print(f"Deleted row with student_id = '{self.student_id}' and course_id = '{self.course_id}'")
+
+        except hive.Error as e:
+            print(f"Hive error: {e}")
 
     def destroy(self):
         try:
