@@ -7,6 +7,7 @@ Synchronization of heterogenous systems considering Hive, PostgreSQL and MongoDB
 3. [Features](#features)
 4. [Code Overview](#code-overview)
 5. [Architecture](#architecture)
+6. [Challenges faced](#challenges-faced)
 
 ## PostgreSQL setup:
 
@@ -114,3 +115,6 @@ sequenceDiagram
     Executor->>SyncFn: sync(handler, snapshot)
     SyncFn->>DB: apply snapshot
 ```
+
+## Challenges faced:
+- If 2 consecutive merges are called for the same recipient database if 2 merges for the same recipient database are very close to each other in the oplogs file, then it causes deadlock in the threads that are created after each MERGE function. Thus, this leads to the program running forever because of the deadlock. The reason being that the internal locking mechanism of each database that is harnessed by the Python connectors, enters this deadlock situation because of the 2 or more threads being created almost simultaneously trying to write to the same database.
