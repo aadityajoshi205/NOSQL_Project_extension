@@ -9,7 +9,8 @@
 6. [Extensibility](#extensibility)
 7. [Operation Logs](#operation-logs)
 8. [Technical Highlights](#technical-highlights)
-9. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
+9. [Limitations and Notes](#limitation-and-notes)
+10. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
 
 ## Overview
 
