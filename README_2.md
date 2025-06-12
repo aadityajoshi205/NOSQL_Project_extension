@@ -1,5 +1,7 @@
 # Multi-Database Synchronization System with RAM-Based Operation History
 
+## Table of Contents:
+
 ## Overview
 
 This project implements a synchronization system for **multiple heterogeneous databases** such as **MongoDB, Hive, PostgreSQL**, etc. It maintains a **temporary memory layer (RAM)** for each database that logs all operations with support for **undo, rollback, merge, and commit** features.
