@@ -46,6 +46,6 @@ Inspired by **system RAM**, changes are staged here before being committed to di
 
 Each database has a corresponding **RAM**, a `map` of:
 
-```cpp
-map<key, vector<tuple<grade, timestamp, delete_flag>>>
+```python
+Dict[Tuple[student_id, course_id], List[Tuple[grade, timestamp, delete_flag]]]
 ```
