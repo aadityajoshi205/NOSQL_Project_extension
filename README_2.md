@@ -55,6 +55,28 @@ Each database has a corresponding **RAM**, a `map or dictionary` of:
 ```python
 Dict[Tuple[student_id, course_id], List[Tuple[grade, timestamp, delete_flag]]]
 ```
+- Key: (student ID, course ID)
+- Value: Stack (vector) of tuples of the format (grade, timestamp, delete_flag). The delete_flag is True if deleted, else False.
+Thus, the RAM stores a history stack of all changes to each key.
+
+### 3. Supported RAM Operations:
+a. SET:
+- Adds new (grade, timestamp, False) tuple to the stack.
+- Adds new keys to RAM if absent.
+- Auto-adds new key to database if not present.
+
+b. GET:
+- Returns the grade from the top of the stack (most recent).
+- If delete_flag = True, reports the key as deleted.
+- If key not found in RAM, queries the database.
+
+c. DELETE:
+- Pushes (last_known_grade, timestamp, True) to stack.
+- Does not immediately remove the key; marks for deletion.
+
+d. UNDO:
+- Pops the last tuple in the key's stack (if available).
+- Reverts to the previous version of the key (or removes if none).
 
 ## Flowchart of the design of the system:
 
