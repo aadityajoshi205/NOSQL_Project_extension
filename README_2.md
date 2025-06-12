@@ -4,7 +4,12 @@
 1. [Overview](#overview)
 2. [Core Components](#core-components)
 3. [RAM Based Temporary Memory Layer](#ram-based-temporary-memory-layer)
-4. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
+4. [Synchronization Features](#synchronization-features)
+5. [Transaction Management](#transaction-management)
+6. [Extensibility](#extensibility)
+7. [Operation Logs](#operation-logs)
+8. [Technical Highlights](#technical-highlights)
+9. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
 
 ## Overview
 
@@ -77,6 +82,52 @@ c. DELETE:
 d. UNDO:
 - Pops the last tuple in the key's stack (if available).
 - Reverts to the previous version of the key (or removes if none).
+
+## Synchronization Features
+
+### 1. MERGE (Unidirectional)
+- One RAM merges from another RAM.
+- Transfers: a) all new keys and b) all latest values (based on timestamp).
+- Only RAM is updated, databases remain unchanged.
+
+### 2. FULL SYNC
+- Merges all RAMs together.
+- Latest data for each key is propagated across all RAMs.
+- Non-reversible operation.
+- No database update.
+
+### 3. SYNC
+- RAM → Database synchronization.
+- Uses multi-threading, with one thread per database.
+- Retrieves only the latest version of each key from RAM.
+- Ideal for large datasets; non-threaded mode available for small data.
+- Uses concurrency to save time.
+
+## Transaction Management
+### COMMIT
+- Writes all staged RAM changes to disk (databases).
+- Empties the RAM (RAM → disk).
+
+### ROLLBACK
+- Empties the RAM without writing to disk.
+- Discards all changes since last commit.
+- Irreversible operation.
+
+## Extensibility
+- Add any number of databases.
+- Just include the appropriate connector.
+- Register database name in the databases[] list in the main program.
+
+## Operation Logs
+Each database maintains an oplog (operation log) that:
+- Records every SET, DELETE, and UNDO operation.
+- Tracks timestamp and value of each change.
+- Allows user to review change history after each input.
+
+## Technical Highlights:
+- Designed with multithreaded architecture for high performance.
+- RAM layer enables: a) Efficient change tracking, b) Quick rollbacks and c) Seamless merge and sync
+- Undo stack model facilitates per-key operation history.
 
 ## Flowchart of the design of the system:
 
