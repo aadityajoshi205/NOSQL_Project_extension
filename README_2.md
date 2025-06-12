@@ -1,6 +1,10 @@
 # Multi-Database Synchronization System with RAM-Based Operation History
 
 ## Table of Contents:
+1. [Overview](#overview)
+2. [Core Components](#core-components)
+3. [RAM Based Temporary Memory Layer](#ram-based-temporary-memory-layer)
+4. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
 
 ## Overview
 
@@ -34,7 +38,7 @@ Each database maintains entries with the following structure:
 
 ---
 
-## RAM-Based Temporary Memory Layer
+## RAM Based Temporary Memory Layer
 
 ### 1. Motivation
 
