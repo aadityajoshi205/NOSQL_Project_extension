@@ -130,6 +130,12 @@ Each database maintains an oplog (operation log) that:
 - RAM layer enables: a) Efficient change tracking, b) Quick rollbacks and c) Seamless merge and sync
 - Undo stack model facilitates per-key operation history.
 
+## Limitation and Notes
+- FULL-SYNC() is not reversible.
+- ROLLBACK() discards all staged data since the last commit.
+- Sync to disk only includes latest state per key.
+- Real-time consistency between databases only after commit.
+
 ## Flowchart of the design of the system:
 
 ```mermaid
