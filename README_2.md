@@ -1,6 +1,6 @@
-# 📚 Multi-Database Synchronization System with RAM-Based Operation History
+# Multi-Database Synchronization System with RAM-Based Operation History
 
-## 🔍 Overview
+## Overview
 
 This project implements a synchronization system for **multiple heterogeneous databases** such as **MongoDB, Hive, PostgreSQL**, etc. It maintains a **temporary memory layer (RAM)** for each database that logs all operations with support for **undo, rollback, merge, and commit** features.
 
@@ -8,9 +8,9 @@ The system ensures consistency and extensibility across databases while maintain
 
 ---
 
-## 🧩 Core Components
+## Core Components
 
-### 1. 🔁 Databases Supported
+### 1. Databases Supported
 
 - MongoDB  
 - Hive  
@@ -32,9 +32,9 @@ Each database maintains entries with the following structure:
 
 ---
 
-## 🧠 RAM-Based Temporary Memory Layer
+## RAM-Based Temporary Memory Layer
 
-### 1. 💡 Motivation
+### 1. Motivation
 
 Inspired by **system RAM**, changes are staged here before being committed to disk. This allows for:
 
@@ -42,9 +42,9 @@ Inspired by **system RAM**, changes are staged here before being committed to di
 - Rollbacks  
 - Undo capabilities  
 
-### 2. 🧾 Structure
+### 2. Structure
 
-Each database has a corresponding **RAM**, a `map` of:
+Each database has a corresponding **RAM**, a `map or dictionary` of:
 
 ```python
 Dict[Tuple[student_id, course_id], List[Tuple[grade, timestamp, delete_flag]]]
