@@ -107,9 +107,9 @@ flowchart TD
     COMMIT -->|Empty RAM| RAMn
 
     UI --> ROLLBACK
-    ROLLBACK -->|Empty RAM (No Sync)| RAM1
-    ROLLBACK -->|Empty RAM (No Sync)| RAM2
-    ROLLBACK -->|Empty RAM (No Sync)| RAMn
+    ROLLBACK -->|Empty RAM No Sync| RAM1
+    ROLLBACK -->|Empty RAM No Sync| RAM2
+    ROLLBACK -->|Empty RAM No Sync| RAMn
 
     SYNC -->|Write Last Tuple| DB1
     SYNC -->|Write Last Tuple| DB2
