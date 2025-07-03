@@ -117,7 +117,7 @@ class HIVEHANDLER:
                 os.remove(temp_filename)
 
     def get(self, db_name: str, collection_name: str, pk: tuple):
-        print(pk)
+        # print(pk)
         if pk is not None:
             self.student_id, self.course_id = pk
         else:
@@ -228,8 +228,9 @@ class HIVEHANDLER:
 
         try:
             query = f"""
-            DELETE FROM {self.table_name}
-            WHERE student_id = '{self.student_id}' AND course_id = '{self.course_id}'
+            INSERT OVERWRITE TABLE {self.table_name}
+            SELECT * FROM {self.table_name}
+            WHERE student_id != '{self.student_id}' AND course_id != '{self.course_id}'
             """
             self.cursor.execute(query)
             print(f"Deleted row with student_id = '{self.student_id}' and course_id = '{self.course_id}'")
@@ -254,10 +255,11 @@ class HIVEHANDLER:
 
 if __name__ == "__main__":
     hive_instance = HIVEHANDLER("student_course_grades", "localhost", 10000, "vaibhav", "CUSTOM", "Badminton@2468")
-    hive_instance.create_table('student_course_grades.csv')
-    # hive_instance.select_data()
-    # hive_instance.upsert_data(('SID1128', 'CSE004'), 'A')
-    # hive_instance.select_data()
-    # hive_instance.upsert_data(('IMT2023001', 'CSC101'), 'A')
-    # hive_instance.select_data(('IMT2023001', 'CSC101'))
-    # hive_instance.select_data()
+    # hive_instance.create_table('student_course_grades.csv')
+    # hive_instance.get('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'))
+    # hive_instance.set('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'), 'B', 2)
+    hive_instance.get('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'))
+    hive_instance.set('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'), 'A', 2)
+    hive_instance.get('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'))
+    hive_instance.delete('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'))
+    hive_instance.get('student_course_grades', 'student_course_grades', ('SID1128', 'CSE004'))
