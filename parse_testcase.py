@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from sync import sync
 from merge import merge
 
+undo=[]
+
 def get_precise_timestamp():
     ns = time.time_ns()
     seconds = ns // 1_000_000_000
@@ -86,6 +88,9 @@ def parse_testcase_file(file_path, db_handlers,Databases):
             elif 'ROLLBACK' in line:
                 for db in Databases:
                     globals()[db+"_cache"].clear()
+                
+            elif 'UNDO' in line:
+                operation='UNDO'
 
             handler=None
             for i in range(0, len(db_handlers)):
@@ -95,6 +100,8 @@ def parse_testcase_file(file_path, db_handlers,Databases):
             if operation == "SET":
                 timestamp=get_precise_timestamp()
                 print(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})")
+                if (student_id,course_id) in globals()[db1+"_cache"].keys():
+                    undo.append([(db1,globals()[db1+"_cache"][(student_id,course_id)][0],student_id,course_id,globals()[db1+"_cache"][(student_id,course_id)][1],globals()[db1+"_cache"][(student_id,course_id)][2])])
                 globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade, 0]
                 logger=open('oplogs.' + db1.lower(), 'a')
                 logger.write(f"{timestamp}, {db1}.SET(({student_id},{course_id}), {grade})\n")
@@ -119,15 +126,24 @@ def parse_testcase_file(file_path, db_handlers,Databases):
                     logger.close()
                     
             if operation=="MERGE":
-                globals()[db1 + "_cache"]=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
+                globals()[db1 + "_cache"],temp=merge(globals()[db1 + "_cache"], globals()[db2 + "_cache"],db1)
+                undo.append(temp)
 
             if operation == "DELETE":
                 timestamp=get_precise_timestamp()
                 print(f"{timestamp}, {db1}.DELETE(({student_id},{course_id}), {grade})")
+                if (student_id,course_id) in globals()[db1+"_cache"].keys():
+                    undo.append([(db1,globals()[db1+"_cache"][(student_id,course_id)][0],student_id,course_id,globals()[db1+"_cache"][(student_id,course_id)][1],globals()[db1+"_cache"][(student_id,course_id)][2])])
                 globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, grade, 1]
                 logger=open('oplogs.' + db1.lower(), 'a')
                 logger.write(f"{timestamp}, {db1}.DELETE(({student_id},{course_id}), {grade})\n")
                 logger.close()
+            
+            if operation == "UNDO":
+                temp=undo.pop()
+                for i in temp:
+                    db1,timestamp,student_id,course_id,value,delete_flag=i
+                    globals()[db1 + "_cache"][(student_id, course_id)] = [timestamp, value, delete_flag]
 
     i=0
     for db in Databases:

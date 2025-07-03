@@ -22,9 +22,3 @@ parse_testcase_file(
     db_handlers=db_handlers,
     Databases=Databases
 )
-
-# parse_testcase_file_multithreading(
-#     file_path=file_path,
-#     db_handlers=db_handlers,
-#     Databases=Databases
-# )
