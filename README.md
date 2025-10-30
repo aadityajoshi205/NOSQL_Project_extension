@@ -10,7 +10,8 @@
 7. [Operation Logs](#operation-logs)
 8. [Technical Highlights](#technical-highlights)
 9. [Limitations and Notes](#limitation-and-notes)
-10. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
+10. [Challenges faced and solutions used to solve them](#challenges-faced-and-solutions-used-to-solve-them)
+11. [Flowchart of the design of the system](#flowchart-of-the-design-of-the-system)
 
 ## Overview
 
