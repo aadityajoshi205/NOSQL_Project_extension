@@ -136,6 +136,12 @@ Each database maintains an oplog (operation log) that:
 - Sync to disk only includes latest state per key.
 - Real-time consistency between databases only after commit.
 
+## Challenges faced and solutions used to solve them
+- Initially, the RAM and DB synchromization was done after every A.MERGE(B) call, on a separate thread.
+- We noticed that if there were 2 or more consecutive MERGE calls where the recipient DB was same (for example: 2 consecutive A.MERGE(B) and A.MERGE(C) calls) then our code was getting stuck and not executing ahead.
+- The issue here was that in the case of 2 or more consecutive MERGE calls where the recipient DB was same, 2 threads (or more) were locking the DB to write to it which was ultimately leading to a deadlock situation.
+- To solve this, we used multithreading at the very end of the code or after a SYNC call, using one thread per DB. This solves the issue of multiple threads trying to lock the same DB and thus, avoids deadlock.
+
 ## Flowchart of the design of the system:
 
 ```mermaid
