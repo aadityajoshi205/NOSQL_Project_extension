@@ -125,7 +125,7 @@ d. UNDO:
 ## Operation Logs
 - To simulate the user activity in the frontend, a universal oplogs file must be given to our system, following the syntax.
 - Then, this universal oplogs file is broken down into oplogs file specific to each database by filtering out all the operations that involve that particular database.
-Each database maintains an oplog (operation log) that:
+### Each database maintains an oplog (operation log) that:
 - Records every SET, DELETE, and UNDO operation.
 - Tracks timestamp and value of each change.
 - Allows user to review change history after each input.
