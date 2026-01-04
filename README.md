@@ -104,6 +104,7 @@ d. UNDO:
 - Retrieves only the latest version of each key from RAM.
 - Ideal for large datasets; non-threaded mode available for small data.
 - Uses concurrency to save time.
+- The SYNC operation can be used as a failover mechanism by scheduling it as a cron job to avoid data loss if the program crashes. Thus, at least some part of the changes made by the oplogs file can be recorded in the database and thus, prevent complete loss of data, if the program crashes.
 
 ## Transaction Management
 ### COMMIT
@@ -119,9 +120,13 @@ d. UNDO:
 - Add any number of databases.
 - Just include the appropriate connector.
 - Register database name in the databases[] list in the main program.
+- It is like installing drivers when adding new hardware components to a system. The appropriate code must be added to include the new database and corresponding handlers must be used. However, it is very easy to include a new database in the system because the philosophy for each database specific code remains the same for all databases.
 
 ## Operation Logs
 Each database maintains an oplog (operation log) that:
+- To simulate the user activity in the frontend, a universal oplogs file must be given to our system, following the syntax.
+- Then, this universal oplogs file is broken down into oplogs file specific to each database by filtering out all the operations that involve that particular database.
+### Each database-specific oplogs file:
 - Records every SET, DELETE, and UNDO operation.
 - Tracks timestamp and value of each change.
 - Allows user to review change history after each input.
