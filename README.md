@@ -123,10 +123,9 @@ d. UNDO:
 - It is like installing drivers when adding new hardware components to a system. The appropriate code must be added to include the new database and corresponding handlers must be used. However, it is very easy to include a new database in the system because the philosophy for each database specific code remains the same for all databases.
 
 ## Operation Logs
-Each database maintains an oplog (operation log) that:
 - To simulate the user activity in the frontend, a universal oplogs file must be given to our system, following the syntax.
 - Then, this universal oplogs file is broken down into oplogs file specific to each database by filtering out all the operations that involve that particular database.
-### Each database-specific oplogs file:
+Each database maintains an oplog (operation log) that:
 - Records every SET, DELETE, and UNDO operation.
 - Tracks timestamp and value of each change.
 - Allows user to review change history after each input.
